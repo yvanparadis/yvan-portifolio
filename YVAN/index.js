@@ -83,3 +83,68 @@ document.querySelectorAll('nav ul li a').forEach(link => {
     navMenu.classList.remove("show"); // Close menu after click
   });
 });
+
+
+   const preloader = document.getElementById('preloader');
+
+  // Hide on initial load
+  window.addEventListener('load', () => {
+    preloader.style.opacity = '0';
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 500);
+  });
+
+  // Add click listener to navbar links
+  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault(); // Stop default jump
+      const targetId = this.getAttribute('href');
+      
+      // Show preloader
+      preloader.style.display = 'flex';
+      setTimeout(() => {
+        preloader.style.opacity = '1';
+      }, 10);
+
+      // After "fake loading", scroll to section
+      setTimeout(() => {
+        document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 800); // Adjust fake load time here
+    });
+  });
+
+    function showSectionsOnScroll() {
+    const sections = document.querySelectorAll('.section');
+    const triggerBottom = window.innerHeight * 0.85;
+
+    sections.forEach(sec => {
+      const boxTop = sec.getBoundingClientRect().top;
+
+      if (boxTop < triggerBottom) {
+        sec.classList.add('show');
+      } else {
+        sec.classList.remove('show');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', showSectionsOnScroll);
+  window.addEventListener('load', showSectionsOnScroll);
+
+
+    AOS.init({
+    duration: 1000, // animation duration
+    once: true, // only animate once on scroll
+  });
+
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // prevent actual form sending
+    localStorage.setItem('messageSent', 'true');
+    window.location.href = 'thank-you.html'; // redirect to custom page
+  });
